@@ -50,7 +50,7 @@ partial class Form1
         lblSessionCount = new Label();
         btnOpenWebsite = new Button();
         btnOpenLogs = new Button();
-        backgroundMusicPlayer = new SoundPlayer(Properties.Resources.Bosanska_Artiljerija_LowLow);
+        backgroundMusicPlayer = new SoundPlayer(Properties.Resources.BGM);
         SuspendLayout();
 
         // Инициализация кнопки "Логи"
