@@ -52,25 +52,6 @@ partial class Form1
         btnOpenLogs = new Button();
         backgroundMusicPlayer = new SoundPlayer(Properties.Resources.BGM);
         SuspendLayout();
-
-        // Инициализация кнопки "Логи"
-        btnOpenLogs.Location = new Point(20, 300); // Положение кнопки
-        btnOpenLogs.Name = "btnOpenLogs";
-        btnOpenLogs.Size = new Size(75, 30);
-        btnOpenLogs.TabIndex = 14;
-        btnOpenLogs.Text = "Логи";
-        btnOpenLogs.UseVisualStyleBackColor = true;
-        btnOpenLogs.Click += btnOpenLogs_Click;
-        // 
-        // btnOpenWebsite
-        // 
-        btnOpenWebsite.Location = new Point(110, 300); // Положение кнопки
-        btnOpenWebsite.Name = "btnOpenWebsite";
-        btnOpenWebsite.Size = new Size(75, 30);
-        btnOpenWebsite.TabIndex = 13;
-        btnOpenWebsite.Text = "Сайт";
-        btnOpenWebsite.UseVisualStyleBackColor = true;
-        btnOpenWebsite.Click += btnOpenWebsite_Click; // Привязка обработчика
         // 
         // btnBrowseOutput
         // 
@@ -108,7 +89,7 @@ partial class Form1
         dateTimePickerStart.Name = "dateTimePickerStart";
         dateTimePickerStart.Size = new Size(200, 27);
         dateTimePickerStart.TabIndex = 7;
-        dateTimePickerStart.ValueChanged += new EventHandler(dateTimePickerStart_ValueChanged);
+        dateTimePickerStart.ValueChanged += dateTimePickerStart_ValueChanged;
         // 
         // dateTimePickerEnd
         // 
@@ -116,7 +97,7 @@ partial class Form1
         dateTimePickerEnd.Name = "dateTimePickerEnd";
         dateTimePickerEnd.Size = new Size(200, 27);
         dateTimePickerEnd.TabIndex = 8;
-        dateTimePickerEnd.ValueChanged += new EventHandler(dateTimePickerEnd_ValueChanged);
+        dateTimePickerEnd.ValueChanged += dateTimePickerEnd_ValueChanged;
         // 
         // lblLastSaveTime
         // 
@@ -156,9 +137,29 @@ partial class Form1
         lblSessionCount.AutoSize = true;
         lblSessionCount.Location = new Point(20, 270);
         lblSessionCount.Name = "lblSessionCount";
-        lblSessionCount.Size = new Size(133, 20);
+        lblSessionCount.Size = new Size(118, 20);
         lblSessionCount.TabIndex = 12;
         lblSessionCount.Text = "Число сессий: 0";
+        // 
+        // btnOpenWebsite
+        // 
+        btnOpenWebsite.Location = new Point(110, 300);
+        btnOpenWebsite.Name = "btnOpenWebsite";
+        btnOpenWebsite.Size = new Size(75, 30);
+        btnOpenWebsite.TabIndex = 13;
+        btnOpenWebsite.Text = "Сайт";
+        btnOpenWebsite.UseVisualStyleBackColor = true;
+        btnOpenWebsite.Click += btnOpenWebsite_Click;
+        // 
+        // btnOpenLogs
+        // 
+        btnOpenLogs.Location = new Point(20, 300);
+        btnOpenLogs.Name = "btnOpenLogs";
+        btnOpenLogs.Size = new Size(75, 30);
+        btnOpenLogs.TabIndex = 14;
+        btnOpenLogs.Text = "Логи";
+        btnOpenLogs.UseVisualStyleBackColor = true;
+        btnOpenLogs.Click += btnOpenLogs_Click;
         // 
         // Form1
         // 
@@ -181,6 +182,7 @@ partial class Form1
         Controls.Add(btnOpenWebsite);
         Controls.Add(btnOpenLogs);
         Icon = (Icon)resources.GetObject("$this.Icon");
+        MaximizeBox = false;
         Name = "Form1";
         Text = "ЛогАх БаБах";
         Load += Form1_Load;
