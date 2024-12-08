@@ -263,7 +263,7 @@ partial class Form1
         }
         else
         {
-            
+
             dateTimePickerStart.Value = lastUsedDate;
             dateTimePickerEnd.Value = DateTime.Today;
             lblLastSaveTime.Text = $"Последний вывод: {lastUsedDate:dd/MM/yyyy HH:mm}";
