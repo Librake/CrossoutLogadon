@@ -16,6 +16,7 @@ partial class Form1
     private System.Windows.Forms.Label lblLastSaveTime;
     private System.Windows.Forms.Label lblStartDate;
     private System.Windows.Forms.Label lblEndDate;
+    private System.Windows.Forms.ProgressBar progressBar;
 
     private System.ComponentModel.IContainer components = null;
 
@@ -38,6 +39,7 @@ partial class Form1
         this.lblLastSaveTime = new System.Windows.Forms.Label();
         this.lblStartDate = new System.Windows.Forms.Label();
         this.lblEndDate = new System.Windows.Forms.Label();
+        this.progressBar = new System.Windows.Forms.ProgressBar();
 
         SuspendLayout();
 
@@ -117,6 +119,15 @@ partial class Form1
         this.lblEndDate.Text = "End Date";
 
         // 
+        // progressBar
+        // 
+        this.progressBar.Location = new System.Drawing.Point(20, 150);
+        this.progressBar.Name = "progressBar";
+        this.progressBar.Size = new System.Drawing.Size(450, 5);
+        this.progressBar.TabIndex = 11;
+
+
+        // 
         // Form1
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -130,6 +141,7 @@ partial class Form1
         Controls.Add(this.txtOutputFolderPath);
         Controls.Add(this.btnBrowseOutput);
         Controls.Add(this.btnOutput);
+        Controls.Add(this.progressBar);
         Name = "Form1";
         Text = "Form1";
         Load += new System.EventHandler(this.Form1_Load);
@@ -179,14 +191,21 @@ partial class Form1
             .OrderBy(log => log.startTime)
             .ToList();
 
+        // Set progress bar maximum value
+        progressBar.Maximum = filteredLogs.Count;
+        progressBar.Value = 0;
+
         // Output filtered logs
         foreach (var log in filteredLogs)
         {
             Debug.WriteLine(log.startTime);
             logWriter.Write(log.ReadContent());
-        }
-        Debug.WriteLine("==================");
 
+            // Update progress bar
+            progressBar.Value++;
+        }
+
+        Debug.WriteLine("==================");
     }
 
     private void SaveOutputFolderPath(string path)
