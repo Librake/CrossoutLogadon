@@ -17,9 +17,6 @@ public class LogStorage
 
         logs.Sort();
 
-        foreach (LogSession log in logs)
-            Debug.WriteLine(log.folderName);
-
     }
 
     static string GetDocumentsPath()

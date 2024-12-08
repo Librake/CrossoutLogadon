@@ -1,24 +1,24 @@
 ﻿namespace CrossoutLogadon;
 
 using System;
-using System.Diagnostics;
 using System.Windows.Forms;
+using System.Linq;
+using System.Diagnostics;
+using Microsoft.VisualBasic.Logging;
 
 partial class Form1
 {
     private System.Windows.Forms.Button btnBrowseOutput;
     private System.Windows.Forms.Button btnOutput;
     private System.Windows.Forms.TextBox txtOutputFolderPath;
+    private System.Windows.Forms.DateTimePicker dateTimePickerStart;
+    private System.Windows.Forms.DateTimePicker dateTimePickerEnd;
+    private System.Windows.Forms.Label lblLastSaveTime;
+    private System.Windows.Forms.Label lblStartDate;
+    private System.Windows.Forms.Label lblEndDate;
 
-    /// <summary>
-    ///  Required designer variable.
-    /// </summary>
     private System.ComponentModel.IContainer components = null;
 
-    /// <summary>
-    ///  Clean up any resources being used.
-    /// </summary>
-    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
     protected override void Dispose(bool disposing)
     {
         if (disposing && (components != null))
@@ -28,17 +28,16 @@ partial class Form1
         base.Dispose(disposing);
     }
 
-    #region Windows Form Designer generated code
-
-    /// <summary>
-    ///  Required method for Designer support - do not modify
-    ///  the contents of this method with the code editor.
-    /// </summary>
     private void InitializeComponent()
     {
         this.btnBrowseOutput = new System.Windows.Forms.Button();
         this.btnOutput = new System.Windows.Forms.Button();
         this.txtOutputFolderPath = new System.Windows.Forms.TextBox();
+        this.dateTimePickerStart = new System.Windows.Forms.DateTimePicker();
+        this.dateTimePickerEnd = new System.Windows.Forms.DateTimePicker();
+        this.lblLastSaveTime = new System.Windows.Forms.Label();
+        this.lblStartDate = new System.Windows.Forms.Label();
+        this.lblEndDate = new System.Windows.Forms.Label();
 
         SuspendLayout();
 
@@ -56,7 +55,7 @@ partial class Form1
         // 
         // btnOutput
         // 
-        this.btnOutput.Location = new System.Drawing.Point(700, 60);
+        this.btnOutput.Location = new System.Drawing.Point(700, 110);
         this.btnOutput.Name = "btnOutput";
         this.btnOutput.Size = new System.Drawing.Size(75, 30);
         this.btnOutput.TabIndex = 5;
@@ -73,11 +72,61 @@ partial class Form1
         this.txtOutputFolderPath.TabIndex = 1;
 
         // 
+        // dateTimePickerStart
+        // 
+        this.dateTimePickerStart.Location = new System.Drawing.Point(20, 85);
+        this.dateTimePickerStart.Name = "dateTimePickerStart";
+        this.dateTimePickerStart.Size = new System.Drawing.Size(200, 27);
+        this.dateTimePickerStart.TabIndex = 7;
+
+        // 
+        // dateTimePickerEnd
+        // 
+        this.dateTimePickerEnd.Location = new System.Drawing.Point(240, 85);
+        this.dateTimePickerEnd.Name = "dateTimePickerEnd";
+        this.dateTimePickerEnd.Size = new System.Drawing.Size(200, 27);
+        this.dateTimePickerEnd.TabIndex = 8;
+
+        // 
+        // lblLastSaveTime
+        // 
+        this.lblLastSaveTime.AutoSize = true;
+        this.lblLastSaveTime.Location = new System.Drawing.Point(20, 60);
+        this.lblLastSaveTime.Name = "lblLastSaveTime";
+        this.lblLastSaveTime.Size = new System.Drawing.Size(144, 20);
+        this.lblLastSaveTime.TabIndex = 6;
+
+        // 
+        // lblStartDate
+        // 
+        this.lblStartDate.AutoSize = true;
+        this.lblStartDate.Location = new System.Drawing.Point(20, 115);
+        this.lblStartDate.Name = "lblStartDate";
+        this.lblStartDate.Size = new System.Drawing.Size(69, 20);
+        this.lblStartDate.TabIndex = 9;
+        this.lblStartDate.Text = "Start Date";
+
+        // 
+        // lblEndDate
+        // 
+        this.lblEndDate.AutoSize = true;
+        this.lblEndDate.Location = new System.Drawing.Point(240, 115);
+        this.lblEndDate.Name = "lblEndDate";
+        this.lblEndDate.Size = new System.Drawing.Size(63, 20);
+        this.lblEndDate.TabIndex = 10;
+        this.lblEndDate.Text = "End Date";
+
+        // 
         // Form1
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        ClientSize = new System.Drawing.Size(800, 300);
+        ClientSize = new System.Drawing.Size(800, 200);
+        Controls.Add(this.lblStartDate);
+        Controls.Add(this.lblEndDate);
+        Controls.Add(this.lblLastSaveTime);
+        Controls.Add(this.dateTimePickerEnd);
+        Controls.Add(this.dateTimePickerStart);
         Controls.Add(this.txtOutputFolderPath);
         Controls.Add(this.btnBrowseOutput);
         Controls.Add(this.btnOutput);
@@ -87,8 +136,6 @@ partial class Form1
         ResumeLayout(false);
         PerformLayout();
     }
-
-    #endregion
 
     private void btnBrowseOutput_Click(object sender, EventArgs e)
     {
@@ -108,6 +155,9 @@ partial class Form1
     private void Form1_Load(object sender, EventArgs e)
     {
         txtOutputFolderPath.Text = LoadOutputFolderPath();
+        dateTimePickerStart.Value = Properties.Settings.Default.LastUsedDate;
+        dateTimePickerEnd.Value = DateTime.Today;
+        lblLastSaveTime.Text = $"Last Save Time: {Properties.Settings.Default.LastUsedDate.ToString("dd/MM/yyyy HH:mm")}";
     }
 
     private void btnOutput_Click(object sender, EventArgs e)
@@ -116,11 +166,27 @@ partial class Form1
         string folderPath = txtOutputFolderPath.Text;
         LogWriter logWriter = new LogWriter(folderPath);
 
-        // Now you can use the logWriter object as needed.
-        foreach (LogSession log in logStorage.logs)
+        // Save the selected date range as the last used date
+        Properties.Settings.Default.LastUsedDate = DateTime.Now;
+        Properties.Settings.Default.Save();
+
+        // Display the last saved date and time
+        lblLastSaveTime.Text = $"Last Save Time: {Properties.Settings.Default.LastUsedDate.ToString("dd/MM/yyyy HH:mm")}";
+
+        // Filter logs based on the selected date range
+        var filteredLogs = logStorage.logs
+            .Where(log => log.startTime.Date >= dateTimePickerStart.Value.Date && log.startTime.Date <= dateTimePickerEnd.Value.Date)
+            .OrderBy(log => log.startTime)
+            .ToList();
+
+        // Output filtered logs
+        foreach (var log in filteredLogs)
         {
+            Debug.WriteLine(log.startTime);
             logWriter.Write(log.ReadContent());
         }
+        Debug.WriteLine("==================");
+
     }
 
     private void SaveOutputFolderPath(string path)

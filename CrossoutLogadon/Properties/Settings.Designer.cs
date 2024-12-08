@@ -34,5 +34,16 @@ namespace CrossoutLogadon.Properties {
                 this["OutputFolderPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime LastUsedDate {
+            get {
+                return ((global::System.DateTime)(this["LastUsedDate"]));
+            }
+            set {
+                this["LastUsedDate"] = value;
+            }
+        }
     }
 }
