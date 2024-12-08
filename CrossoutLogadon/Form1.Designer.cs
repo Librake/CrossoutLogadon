@@ -10,7 +10,7 @@ partial class Form1
 {
     private System.Windows.Forms.Button btnBrowseOutput;
     private System.Windows.Forms.Button btnOutput;
-    private System.Windows.Forms.TextBox txtOutputFolderPath;
+    private System.Windows.Forms.Label lblOutputFolderPath;
     private System.Windows.Forms.DateTimePicker dateTimePickerStart;
     private System.Windows.Forms.DateTimePicker dateTimePickerEnd;
     private System.Windows.Forms.Label lblLastSaveTime;
@@ -33,7 +33,7 @@ partial class Form1
     {
         this.btnBrowseOutput = new System.Windows.Forms.Button();
         this.btnOutput = new System.Windows.Forms.Button();
-        this.txtOutputFolderPath = new System.Windows.Forms.TextBox();
+        this.lblOutputFolderPath = new System.Windows.Forms.Label();
         this.dateTimePickerStart = new System.Windows.Forms.DateTimePicker();
         this.dateTimePickerEnd = new System.Windows.Forms.DateTimePicker();
         this.lblLastSaveTime = new System.Windows.Forms.Label();
@@ -46,32 +46,35 @@ partial class Form1
         // 
         // btnBrowseOutput
         // 
-        this.btnBrowseOutput.Location = new System.Drawing.Point(700, 20);
+        this.btnBrowseOutput.Location = new System.Drawing.Point(500, 20);
         this.btnBrowseOutput.Name = "btnBrowseOutput";
         this.btnBrowseOutput.Size = new System.Drawing.Size(75, 30);
         this.btnBrowseOutput.TabIndex = 0;
-        this.btnBrowseOutput.Text = "Browse";
+        this.btnBrowseOutput.Text = "Обзор";
         this.btnBrowseOutput.UseVisualStyleBackColor = true;
         this.btnBrowseOutput.Click += new System.EventHandler(this.btnBrowseOutput_Click);
 
         // 
         // btnOutput
         // 
-        this.btnOutput.Location = new System.Drawing.Point(700, 110);
+        this.btnOutput.Location = new System.Drawing.Point(500, 110);
         this.btnOutput.Name = "btnOutput";
         this.btnOutput.Size = new System.Drawing.Size(75, 30);
         this.btnOutput.TabIndex = 5;
-        this.btnOutput.Text = "Output";
+        this.btnOutput.Text = "Вывод";
         this.btnOutput.UseVisualStyleBackColor = true;
         this.btnOutput.Click += new System.EventHandler(this.btnOutput_Click);
 
         // 
-        // txtOutputFolderPath
+        // lblOutputFolderPath
         // 
-        this.txtOutputFolderPath.Location = new System.Drawing.Point(20, 20);
-        this.txtOutputFolderPath.Name = "txtOutputFolderPath";
-        this.txtOutputFolderPath.Size = new System.Drawing.Size(660, 27);
-        this.txtOutputFolderPath.TabIndex = 1;
+        this.lblOutputFolderPath.Location = new System.Drawing.Point(20, 20);
+        this.lblOutputFolderPath.Name = "lblOutputFolderPath";
+        this.lblOutputFolderPath.Size = new System.Drawing.Size(450, 27);
+        this.lblOutputFolderPath.TabIndex = 1;
+        this.lblOutputFolderPath.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+        this.lblOutputFolderPath.Text = "Папка для вывода не выбрана";
+        this.lblOutputFolderPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 
         // 
         // dateTimePickerStart
@@ -106,7 +109,7 @@ partial class Form1
         this.lblStartDate.Name = "lblStartDate";
         this.lblStartDate.Size = new System.Drawing.Size(69, 20);
         this.lblStartDate.TabIndex = 9;
-        this.lblStartDate.Text = "Start Date";
+        this.lblStartDate.Text = "Начало";
 
         // 
         // lblEndDate
@@ -116,7 +119,7 @@ partial class Form1
         this.lblEndDate.Name = "lblEndDate";
         this.lblEndDate.Size = new System.Drawing.Size(63, 20);
         this.lblEndDate.TabIndex = 10;
-        this.lblEndDate.Text = "End Date";
+        this.lblEndDate.Text = "Конец";
 
         // 
         // progressBar
@@ -126,24 +129,25 @@ partial class Form1
         this.progressBar.Size = new System.Drawing.Size(450, 5);
         this.progressBar.TabIndex = 11;
 
-
         // 
         // Form1
         // 
+        this.BackgroundImage = Properties.Resources.BackgroundImage; // Укажите имя изображения
+        this.BackgroundImageLayout = ImageLayout.Stretch; // Масштабировать изображение
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        ClientSize = new System.Drawing.Size(800, 200);
+        ClientSize = new System.Drawing.Size(600, 375);
         Controls.Add(this.lblStartDate);
         Controls.Add(this.lblEndDate);
         Controls.Add(this.lblLastSaveTime);
         Controls.Add(this.dateTimePickerEnd);
         Controls.Add(this.dateTimePickerStart);
-        Controls.Add(this.txtOutputFolderPath);
+        Controls.Add(this.lblOutputFolderPath);
         Controls.Add(this.btnBrowseOutput);
         Controls.Add(this.btnOutput);
         Controls.Add(this.progressBar);
         Name = "Form1";
-        Text = "Form1";
+        Text = "ЛогАх БаБах";
         Load += new System.EventHandler(this.Form1_Load);
         ResumeLayout(false);
         PerformLayout();
@@ -153,55 +157,48 @@ partial class Form1
     {
         using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
         {
-            folderDialog.Description = "Выберите папку для сохранения выходного файла";
+            folderDialog.Description = "Выбери папку для вывода";
             folderDialog.ShowNewFolderButton = true;
 
             if (folderDialog.ShowDialog() == DialogResult.OK)
             {
-                txtOutputFolderPath.Text = folderDialog.SelectedPath;
-                SaveOutputFolderPath(txtOutputFolderPath.Text);
+                lblOutputFolderPath.Text = folderDialog.SelectedPath;
+                SaveOutputFolderPath(lblOutputFolderPath.Text);
             }
         }
     }
 
     private void Form1_Load(object sender, EventArgs e)
     {
-        txtOutputFolderPath.Text = LoadOutputFolderPath();
+        lblOutputFolderPath.Text = LoadOutputFolderPath();
         dateTimePickerStart.Value = Properties.Settings.Default.LastUsedDate;
         dateTimePickerEnd.Value = DateTime.Today;
-        lblLastSaveTime.Text = $"Last Save Time: {Properties.Settings.Default.LastUsedDate.ToString("dd/MM/yyyy HH:mm")}";
+        lblLastSaveTime.Text = $"Последний вывод: {Properties.Settings.Default.LastUsedDate:dd/MM/yyyy HH:mm}";
     }
 
     private void btnOutput_Click(object sender, EventArgs e)
     {
-        // Create a LogWriter with the selected folder path
-        string folderPath = txtOutputFolderPath.Text;
+        string folderPath = lblOutputFolderPath.Text;
         LogWriter logWriter = new LogWriter(folderPath);
 
-        // Save the selected date range as the last used date
         Properties.Settings.Default.LastUsedDate = DateTime.Now;
         Properties.Settings.Default.Save();
 
-        // Display the last saved date and time
-        lblLastSaveTime.Text = $"Last Save Time: {Properties.Settings.Default.LastUsedDate.ToString("dd/MM/yyyy HH:mm")}";
+        lblLastSaveTime.Text = $"Last Save Time: {Properties.Settings.Default.LastUsedDate:dd/MM/yyyy HH:mm}";
 
-        // Filter logs based on the selected date range
         var filteredLogs = logStorage.logs
             .Where(log => log.startTime.Date >= dateTimePickerStart.Value.Date && log.startTime.Date <= dateTimePickerEnd.Value.Date)
             .OrderBy(log => log.startTime)
             .ToList();
 
-        // Set progress bar maximum value
         progressBar.Maximum = filteredLogs.Count;
         progressBar.Value = 0;
 
-        // Output filtered logs
         foreach (var log in filteredLogs)
         {
             Debug.WriteLine(log.startTime);
             logWriter.Write(log.ReadContent());
 
-            // Update progress bar
             progressBar.Value++;
         }
 
