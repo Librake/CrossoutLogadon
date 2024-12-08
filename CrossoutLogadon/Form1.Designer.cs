@@ -6,12 +6,13 @@ using System.Linq;
 using System.Diagnostics;
 using System.Media;
 using Microsoft.VisualBasic.Logging;
+using System.Windows.Forms.VisualStyles;
 
 partial class Form1
 {
     private System.Windows.Forms.Button btnBrowseOutput;
     private System.Windows.Forms.Button btnOutput;
-    private System.Windows.Forms.Label lblOutputFolderPath;
+    private System.Windows.Forms.TextBox lblOutputFolderPath;
     private System.Windows.Forms.DateTimePicker dateTimePickerStart;
     private System.Windows.Forms.DateTimePicker dateTimePickerEnd;
     private System.Windows.Forms.Label lblLastSaveTime;
@@ -40,7 +41,8 @@ partial class Form1
         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
         btnBrowseOutput = new Button();
         btnOutput = new Button();
-        lblOutputFolderPath = new Label();
+        //lblOutputFolderPath = new TextBox();
+        lblOutputFolderPath = new System.Windows.Forms.TextBox();
         dateTimePickerStart = new DateTimePicker();
         dateTimePickerEnd = new DateTimePicker();
         lblLastSaveTime = new Label();
@@ -55,7 +57,7 @@ partial class Form1
         // 
         // btnBrowseOutput
         // 
-        btnBrowseOutput.Location = new Point(500, 15);
+        btnBrowseOutput.Location = new Point(500, 13);
         btnBrowseOutput.Name = "btnBrowseOutput";
         btnBrowseOutput.Size = new Size(75, 30);
         btnBrowseOutput.TabIndex = 0;
@@ -75,13 +77,15 @@ partial class Form1
         // 
         // lblOutputFolderPath
         // 
-        lblOutputFolderPath.BorderStyle = BorderStyle.Fixed3D;
-        lblOutputFolderPath.Location = new Point(20, 15);
+        lblOutputFolderPath.Location = new System.Drawing.Point(20, 15);
         lblOutputFolderPath.Name = "lblOutputFolderPath";
-        lblOutputFolderPath.Size = new Size(450, 27);
-        lblOutputFolderPath.TabIndex = 1;
         lblOutputFolderPath.Text = "Папка для вывода не выбрана";
-        lblOutputFolderPath.TextAlign = ContentAlignment.MiddleLeft;
+        lblOutputFolderPath.Size = new System.Drawing.Size(450, 30);
+        lblOutputFolderPath.TabIndex = 1;
+        lblOutputFolderPath.Click += (s, e) => lblOutputFolderPath.SelectAll();
+        lblOutputFolderPath.ReadOnly = true;
+
+
         // 
         // dateTimePickerStart
         // 
@@ -230,21 +234,51 @@ partial class Form1
             {
                 lblOutputFolderPath.Text = folderDialog.SelectedPath;
                 SaveOutputFolderPath(lblOutputFolderPath.Text);
+                btnOutput.Enabled = true; // Включить кнопку "Вывод" после выбора папки
             }
         }
     }
 
+
+
     private void Form1_Load(object sender, EventArgs e)
     {
-        lblOutputFolderPath.Text = LoadOutputFolderPath();
-        dateTimePickerStart.Value = Properties.Settings.Default.LastUsedDate;
-        dateTimePickerEnd.Value = DateTime.Today;
-        lblLastSaveTime.Text = $"Последний вывод: {Properties.Settings.Default.LastUsedDate:dd/MM/yyyy HH:mm}";
+        string outputFolderPath = LoadOutputFolderPath();
+        DateTime lastUsedDate = Properties.Settings.Default.LastUsedDate;
+
+        if (string.IsNullOrEmpty(outputFolderPath))
+        {
+            lblOutputFolderPath.Text = "Выбери папку для вывода";
+            lblOutputFolderPath.ReadOnly = true;
+            btnOutput.Enabled = false; // Блокируем кнопку "Вывод"
+        }
+        else
+        {
+            lblOutputFolderPath.Text = outputFolderPath;
+        }
+
+        if (lastUsedDate == default(DateTime))
+        {
+            lblLastSaveTime.Text = "Выбери интервал";
+        }
+        else
+        {
+            
+            dateTimePickerStart.Value = lastUsedDate;
+            dateTimePickerEnd.Value = DateTime.Today;
+            lblLastSaveTime.Text = $"Последний вывод: {lastUsedDate:dd/MM/yyyy HH:mm}";
+        }
     }
 
     private void btnOutput_Click(object sender, EventArgs e)
     {
         string folderPath = lblOutputFolderPath.Text;
+        if (string.IsNullOrEmpty(folderPath) || folderPath == "Выбери папку для вывода")
+        {
+            MessageBox.Show("Пожалуйста, выберите папку для вывода.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
         LogWriter logWriter = new LogWriter(folderPath);
 
         Properties.Settings.Default.LastUsedDate = DateTime.Now;
@@ -269,7 +303,12 @@ partial class Form1
         }
 
         Debug.WriteLine("==================");
+
+        // После завершения обработки, позволяешь пользователю выбрать папку снова
+        lblOutputFolderPath.ReadOnly = false;
+        btnOutput.Enabled = true;
     }
+
 
     private void SaveOutputFolderPath(string path)
     {

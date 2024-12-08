@@ -37,7 +37,7 @@ public class LogSession : IComparable<LogSession>
         }
     }
 
-    public int CompareTo(LogSession other)
+    public int CompareTo(LogSession? other)
     {
         if (other == null)
         {
