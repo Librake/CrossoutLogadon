@@ -9,6 +9,6 @@ public partial class Form1 : Form
     {
         logStorage = new LogStorage();
         InitializeComponent();
-
+        this.FormBorderStyle = FormBorderStyle.FixedDialog;
     }
 }

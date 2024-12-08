@@ -4,6 +4,7 @@ using System;
 using System.Windows.Forms;
 using System.Linq;
 using System.Diagnostics;
+using System.Media;
 using Microsoft.VisualBasic.Logging;
 
 partial class Form1
@@ -17,6 +18,11 @@ partial class Form1
     private System.Windows.Forms.Label lblStartDate;
     private System.Windows.Forms.Label lblEndDate;
     private System.Windows.Forms.ProgressBar progressBar;
+    private System.Windows.Forms.Label lblSessionCount;
+    private SoundPlayer backgroundMusicPlayer;
+    private System.Windows.Forms.Button btnOpenWebsite;
+    private System.Windows.Forms.Button btnOpenLogs;
+
 
     private System.ComponentModel.IContainer components = null;
 
@@ -31,126 +37,184 @@ partial class Form1
 
     private void InitializeComponent()
     {
-        this.btnBrowseOutput = new System.Windows.Forms.Button();
-        this.btnOutput = new System.Windows.Forms.Button();
-        this.lblOutputFolderPath = new System.Windows.Forms.Label();
-        this.dateTimePickerStart = new System.Windows.Forms.DateTimePicker();
-        this.dateTimePickerEnd = new System.Windows.Forms.DateTimePicker();
-        this.lblLastSaveTime = new System.Windows.Forms.Label();
-        this.lblStartDate = new System.Windows.Forms.Label();
-        this.lblEndDate = new System.Windows.Forms.Label();
-        this.progressBar = new System.Windows.Forms.ProgressBar();
-
+        System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+        btnBrowseOutput = new Button();
+        btnOutput = new Button();
+        lblOutputFolderPath = new Label();
+        dateTimePickerStart = new DateTimePicker();
+        dateTimePickerEnd = new DateTimePicker();
+        lblLastSaveTime = new Label();
+        lblStartDate = new Label();
+        lblEndDate = new Label();
+        progressBar = new ProgressBar();
+        lblSessionCount = new Label();
+        btnOpenWebsite = new Button();
+        btnOpenLogs = new Button();
+        backgroundMusicPlayer = new SoundPlayer(Properties.Resources.Bosanska_Artiljerija_LowLow);
         SuspendLayout();
 
+        // Инициализация кнопки "Логи"
+        btnOpenLogs.Location = new Point(20, 300); // Положение кнопки
+        btnOpenLogs.Name = "btnOpenLogs";
+        btnOpenLogs.Size = new Size(75, 30);
+        btnOpenLogs.TabIndex = 14;
+        btnOpenLogs.Text = "Логи";
+        btnOpenLogs.UseVisualStyleBackColor = true;
+        btnOpenLogs.Click += btnOpenLogs_Click;
+        // 
+        // btnOpenWebsite
+        // 
+        btnOpenWebsite.Location = new Point(110, 300); // Положение кнопки
+        btnOpenWebsite.Name = "btnOpenWebsite";
+        btnOpenWebsite.Size = new Size(75, 30);
+        btnOpenWebsite.TabIndex = 13;
+        btnOpenWebsite.Text = "Сайт";
+        btnOpenWebsite.UseVisualStyleBackColor = true;
+        btnOpenWebsite.Click += btnOpenWebsite_Click; // Привязка обработчика
         // 
         // btnBrowseOutput
         // 
-        this.btnBrowseOutput.Location = new System.Drawing.Point(500, 20);
-        this.btnBrowseOutput.Name = "btnBrowseOutput";
-        this.btnBrowseOutput.Size = new System.Drawing.Size(75, 30);
-        this.btnBrowseOutput.TabIndex = 0;
-        this.btnBrowseOutput.Text = "Обзор";
-        this.btnBrowseOutput.UseVisualStyleBackColor = true;
-        this.btnBrowseOutput.Click += new System.EventHandler(this.btnBrowseOutput_Click);
-
+        btnBrowseOutput.Location = new Point(500, 15);
+        btnBrowseOutput.Name = "btnBrowseOutput";
+        btnBrowseOutput.Size = new Size(75, 30);
+        btnBrowseOutput.TabIndex = 0;
+        btnBrowseOutput.Text = "Обзор";
+        btnBrowseOutput.UseVisualStyleBackColor = true;
+        btnBrowseOutput.Click += btnBrowseOutput_Click;
         // 
         // btnOutput
         // 
-        this.btnOutput.Location = new System.Drawing.Point(500, 110);
-        this.btnOutput.Name = "btnOutput";
-        this.btnOutput.Size = new System.Drawing.Size(75, 30);
-        this.btnOutput.TabIndex = 5;
-        this.btnOutput.Text = "Вывод";
-        this.btnOutput.UseVisualStyleBackColor = true;
-        this.btnOutput.Click += new System.EventHandler(this.btnOutput_Click);
-
+        btnOutput.Location = new Point(500, 330);
+        btnOutput.Name = "btnOutput";
+        btnOutput.Size = new Size(75, 30);
+        btnOutput.TabIndex = 5;
+        btnOutput.Text = "Вывод";
+        btnOutput.UseVisualStyleBackColor = true;
+        btnOutput.Click += btnOutput_Click;
         // 
         // lblOutputFolderPath
         // 
-        this.lblOutputFolderPath.Location = new System.Drawing.Point(20, 20);
-        this.lblOutputFolderPath.Name = "lblOutputFolderPath";
-        this.lblOutputFolderPath.Size = new System.Drawing.Size(450, 27);
-        this.lblOutputFolderPath.TabIndex = 1;
-        this.lblOutputFolderPath.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-        this.lblOutputFolderPath.Text = "Папка для вывода не выбрана";
-        this.lblOutputFolderPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-
+        lblOutputFolderPath.BorderStyle = BorderStyle.Fixed3D;
+        lblOutputFolderPath.Location = new Point(20, 15);
+        lblOutputFolderPath.Name = "lblOutputFolderPath";
+        lblOutputFolderPath.Size = new Size(450, 27);
+        lblOutputFolderPath.TabIndex = 1;
+        lblOutputFolderPath.Text = "Папка для вывода не выбрана";
+        lblOutputFolderPath.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // dateTimePickerStart
         // 
-        this.dateTimePickerStart.Location = new System.Drawing.Point(20, 85);
-        this.dateTimePickerStart.Name = "dateTimePickerStart";
-        this.dateTimePickerStart.Size = new System.Drawing.Size(200, 27);
-        this.dateTimePickerStart.TabIndex = 7;
-
+        dateTimePickerStart.Location = new Point(20, 85);
+        dateTimePickerStart.Name = "dateTimePickerStart";
+        dateTimePickerStart.Size = new Size(200, 27);
+        dateTimePickerStart.TabIndex = 7;
+        dateTimePickerStart.ValueChanged += new EventHandler(dateTimePickerStart_ValueChanged);
         // 
         // dateTimePickerEnd
         // 
-        this.dateTimePickerEnd.Location = new System.Drawing.Point(240, 85);
-        this.dateTimePickerEnd.Name = "dateTimePickerEnd";
-        this.dateTimePickerEnd.Size = new System.Drawing.Size(200, 27);
-        this.dateTimePickerEnd.TabIndex = 8;
-
+        dateTimePickerEnd.Location = new Point(240, 85);
+        dateTimePickerEnd.Name = "dateTimePickerEnd";
+        dateTimePickerEnd.Size = new Size(200, 27);
+        dateTimePickerEnd.TabIndex = 8;
+        dateTimePickerEnd.ValueChanged += new EventHandler(dateTimePickerEnd_ValueChanged);
         // 
         // lblLastSaveTime
         // 
-        this.lblLastSaveTime.AutoSize = true;
-        this.lblLastSaveTime.Location = new System.Drawing.Point(20, 60);
-        this.lblLastSaveTime.Name = "lblLastSaveTime";
-        this.lblLastSaveTime.Size = new System.Drawing.Size(144, 20);
-        this.lblLastSaveTime.TabIndex = 6;
-
+        lblLastSaveTime.AutoSize = true;
+        lblLastSaveTime.Location = new Point(20, 55);
+        lblLastSaveTime.Name = "lblLastSaveTime";
+        lblLastSaveTime.Size = new Size(0, 20);
+        lblLastSaveTime.TabIndex = 6;
         // 
         // lblStartDate
         // 
-        this.lblStartDate.AutoSize = true;
-        this.lblStartDate.Location = new System.Drawing.Point(20, 115);
-        this.lblStartDate.Name = "lblStartDate";
-        this.lblStartDate.Size = new System.Drawing.Size(69, 20);
-        this.lblStartDate.TabIndex = 9;
-        this.lblStartDate.Text = "Начало";
-
+        lblStartDate.AutoSize = true;
+        lblStartDate.Location = new Point(20, 115);
+        lblStartDate.Name = "lblStartDate";
+        lblStartDate.Size = new Size(61, 20);
+        lblStartDate.TabIndex = 9;
+        lblStartDate.Text = "Начало";
         // 
         // lblEndDate
         // 
-        this.lblEndDate.AutoSize = true;
-        this.lblEndDate.Location = new System.Drawing.Point(240, 115);
-        this.lblEndDate.Name = "lblEndDate";
-        this.lblEndDate.Size = new System.Drawing.Size(63, 20);
-        this.lblEndDate.TabIndex = 10;
-        this.lblEndDate.Text = "Конец";
-
+        lblEndDate.AutoSize = true;
+        lblEndDate.Location = new Point(240, 115);
+        lblEndDate.Name = "lblEndDate";
+        lblEndDate.Size = new Size(53, 20);
+        lblEndDate.TabIndex = 10;
+        lblEndDate.Text = "Конец";
         // 
         // progressBar
         // 
-        this.progressBar.Location = new System.Drawing.Point(20, 150);
-        this.progressBar.Name = "progressBar";
-        this.progressBar.Size = new System.Drawing.Size(450, 5);
-        this.progressBar.TabIndex = 11;
-
+        progressBar.Location = new Point(20, 342);
+        progressBar.Name = "progressBar";
+        progressBar.Size = new Size(450, 7);
+        progressBar.TabIndex = 11;
+        // 
+        // lblSessionCount
+        // 
+        lblSessionCount.AutoSize = true;
+        lblSessionCount.Location = new Point(20, 270);
+        lblSessionCount.Name = "lblSessionCount";
+        lblSessionCount.Size = new Size(133, 20);
+        lblSessionCount.TabIndex = 12;
+        lblSessionCount.Text = "Число сессий: 0";
         // 
         // Form1
         // 
-        this.BackgroundImage = Properties.Resources.BackgroundImage; // Укажите имя изображения
-        this.BackgroundImageLayout = ImageLayout.Stretch; // Масштабировать изображение
-        AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-        AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        ClientSize = new System.Drawing.Size(600, 375);
-        Controls.Add(this.lblStartDate);
-        Controls.Add(this.lblEndDate);
-        Controls.Add(this.lblLastSaveTime);
-        Controls.Add(this.dateTimePickerEnd);
-        Controls.Add(this.dateTimePickerStart);
-        Controls.Add(this.lblOutputFolderPath);
-        Controls.Add(this.btnBrowseOutput);
-        Controls.Add(this.btnOutput);
-        Controls.Add(this.progressBar);
+        AutoScaleDimensions = new SizeF(8F, 20F);
+        AutoScaleMode = AutoScaleMode.Font;
+        BackColor = SystemColors.Control;
+        BackgroundImage = Properties.Resources.BackgroundImage;
+        BackgroundImageLayout = ImageLayout.Stretch;
+        ClientSize = new Size(600, 375);
+        Controls.Add(lblStartDate);
+        Controls.Add(lblEndDate);
+        Controls.Add(lblLastSaveTime);
+        Controls.Add(dateTimePickerEnd);
+        Controls.Add(dateTimePickerStart);
+        Controls.Add(lblOutputFolderPath);
+        Controls.Add(btnBrowseOutput);
+        Controls.Add(btnOutput);
+        Controls.Add(progressBar);
+        Controls.Add(lblSessionCount);
+        Controls.Add(btnOpenWebsite);
+        Controls.Add(btnOpenLogs);
+        Icon = (Icon)resources.GetObject("$this.Icon");
         Name = "Form1";
         Text = "ЛогАх БаБах";
-        Load += new System.EventHandler(this.Form1_Load);
+        Load += Form1_Load;
         ResumeLayout(false);
         PerformLayout();
+        backgroundMusicPlayer.PlayLooping();
+    }
+
+    private void btnOpenLogs_Click(object sender, EventArgs e)
+    {
+        string folderPath = logStorage.LogsFolderPath;
+
+        if (System.IO.Directory.Exists(folderPath))
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = folderPath,
+                UseShellExecute = true
+            });
+        }
+        else
+        {
+            MessageBox.Show("Папка не найдена. Проверьте путь.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    // Обработчик события нажатия кнопки "Сайт"
+    private void btnOpenWebsite_Click(object sender, EventArgs e)
+    {
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = "https://crossout-info.com/",
+            UseShellExecute = true // Используем системный браузер
+        });
     }
 
     private void btnBrowseOutput_Click(object sender, EventArgs e)
@@ -184,7 +248,7 @@ partial class Form1
         Properties.Settings.Default.LastUsedDate = DateTime.Now;
         Properties.Settings.Default.Save();
 
-        lblLastSaveTime.Text = $"Last Save Time: {Properties.Settings.Default.LastUsedDate:dd/MM/yyyy HH:mm}";
+        lblLastSaveTime.Text = $"Последний вывод: {Properties.Settings.Default.LastUsedDate:dd/MM/yyyy HH:mm}";
 
         var filteredLogs = logStorage.logs
             .Where(log => log.startTime.Date >= dateTimePickerStart.Value.Date && log.startTime.Date <= dateTimePickerEnd.Value.Date)
@@ -214,5 +278,32 @@ partial class Form1
     private string LoadOutputFolderPath()
     {
         return Properties.Settings.Default.OutputFolderPath;
+    }
+
+    private void ResetProgressBar()
+    {
+        progressBar.Value = 0;
+    }
+
+    private void UpdateSessionCount()
+    {
+        var filteredLogs = logStorage.logs
+            .Where(log => log.startTime.Date >= dateTimePickerStart.Value.Date && log.startTime.Date <= dateTimePickerEnd.Value.Date)
+            .OrderBy(log => log.startTime)
+            .ToList();
+
+        lblSessionCount.Text = $"Число сессий: {filteredLogs.Count}";
+    }
+
+    private void dateTimePickerStart_ValueChanged(object sender, EventArgs e)
+    {
+        ResetProgressBar();
+        UpdateSessionCount();
+    }
+
+    private void dateTimePickerEnd_ValueChanged(object sender, EventArgs e)
+    {
+        ResetProgressBar();
+        UpdateSessionCount();
     }
 }

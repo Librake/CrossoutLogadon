@@ -3,7 +3,7 @@
 namespace CrossoutLogadon;
 public class LogStorage
 {
-    private string LogsFolderPath;
+    public string LogsFolderPath;
     private string CrossoutLogs = "\\My Games\\Crossout\\logs";
     public List<LogSession> logs = new List<LogSession>();
 

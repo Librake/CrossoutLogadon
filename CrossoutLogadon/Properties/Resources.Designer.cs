@@ -69,5 +69,32 @@ namespace CrossoutLogadon.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.IO.UnmanagedMemoryStream, аналогичного System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream Bosanska_Artiljerija {
+            get {
+                return ResourceManager.GetStream("Bosanska_Artiljerija", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.IO.UnmanagedMemoryStream, аналогичного System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream Bosanska_Artiljerija_Low {
+            get {
+                return ResourceManager.GetStream("Bosanska_Artiljerija_Low", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.IO.UnmanagedMemoryStream, аналогичного System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream Bosanska_Artiljerija_LowLow {
+            get {
+                return ResourceManager.GetStream("Bosanska_Artiljerija_LowLow", resourceCulture);
+            }
+        }
     }
 }
